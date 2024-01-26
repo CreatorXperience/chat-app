@@ -1,14 +1,20 @@
-import { useContext } from "react"
+import { useContext, useEffect } from "react"
 import useForm from "./hooks/useForm"
 import userInfoContext from "../../context/userInfoProvider"
 
+
 const Formic  = ()=>{
 
-const {handleInputEmail,handleInputName,handleInputPass,handleSetIsSignup,isOnSignupPage,userInfo, handleSubmit, data} =  useForm()
+const {handleInputEmail,handleInputName,handleInputPass,handleSetIsSignup,isOnSignupPage,userInfo, handleSubmit, data,isSuccess} =  useForm()
 
-    const userContext =  useContext(userInfoContext)
-    userContext?.setUserInfo(data)
-    
+const userContext =  useContext(userInfoContext)
+
+useEffect(()=>{
+    userContext?.setUserInfo(data) 
+}, [isSuccess])
+
+console.log(data)
+
         return (
         <div className="form-container flex justify-center  mt-[200px]">
             <div className="form-section h-[450px] w-[22%] bg-slate-800 rounded-md m-0">
