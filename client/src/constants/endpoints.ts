@@ -1,5 +1,6 @@
 const ENDPOINT =  {
-    signup: "/api/signup"
+    signup: "/api/signup",
+    login: "/api/login"
 }
 const DEFAULT_URL = "http://localhost:5000"
 
