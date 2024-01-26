@@ -6,3 +6,8 @@
 body, html {
     background-color: rgb(15 23 42);
 }
+
+.image{
+    background-image: url("./images/chat-image.jpeg");
+    background-size: cover;
+}
