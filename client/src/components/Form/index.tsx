@@ -7,7 +7,7 @@ import { useNavigate } from "react-router-dom"
 
 const Formic  = ()=>{
 
-const {handleInputEmail,handleInputName,handleInputPass,handleSetIsSignup,isOnSignupPage,userInfo, handleSubmit, data,isSuccess, loginResponse, loginSuccess} =  useForm()
+const {handleInputEmail,handleInputName,handleInputPass,handleSetIsSignup,isOnSignupPage,userInfo, handleSubmit, data,isSuccess, loginResponse, loginSuccess,loginError, error} =  useForm()
 
 const userContext =  useContext(userInfoContext)
 const navigate  =  useNavigate()
@@ -19,11 +19,12 @@ useEffect(()=>{
     localStorage.setItem("userinfo", JSON.stringify(loginResponse)) 
     navigate("/me")
     window.location.reload()
+    
     }
-}, [loginSuccess])
+}, [loginSuccess,loginError,])
 
-console.log(data)
-console.log(loginResponse)
+// console.log(data)
+// console.log(loginResponse)
 
         return (
         <div className="form-container flex justify-center  mt-[200px]">

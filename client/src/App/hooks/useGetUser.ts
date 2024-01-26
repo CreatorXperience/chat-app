@@ -10,7 +10,6 @@ const useGetUser = ()=>{
     useEffect(()=>{
         let user =  localStorage.getItem("userinfo")
         if(user){
-            console.log("user not found", !!user)
            let parsed =  JSON.parse(user)
             setUser(parsed)
             }

@@ -1,6 +1,6 @@
 import { useCallback, useEffect, useMemo, useState } from "react";
 import {  useNavigate, Outlet } from "react-router-dom";
-import Navigation from "../components/navigation";
+import Navigation from "../components/Navigation/navigation";
 import isUserOnSignUpPageContext from "../context/signupProvider";
 import { QueryClientProvider, QueryClient} from "react-query";
 import userInfoContext from "../context/userInfoProvider";
@@ -27,7 +27,7 @@ function App() {
 
   let setIsOnSignupPageCallback =  useCallback(setIsOnSignUpPage, [])
 
-  let isSignupValue = useMemo(()=>{
+  let isOnSignUpPageValue = useMemo(()=>{
     return {isUserOnSignUpPage,setIsOnSignupPageCallback}
   },[isUserOnSignUpPage])
   
@@ -41,11 +41,9 @@ function App() {
 
 useEffect(()=>{
   if(user){
-    console.log(user)
   navigate("/me")
     }
     else{
-      console.log(user)
 navigate("/register")
     }
 },[user])
@@ -55,7 +53,7 @@ navigate("/register")
     <QueryClientProvider client={client}>
     <div className="w-[100%] h-[100vh] bg-slate-900">
     <userInfoContext.Provider value={userInfoValue}>
-    <isUserOnSignUpPageContext.Provider value={isSignupValue}>
+    <isUserOnSignUpPageContext.Provider value={isOnSignUpPageValue}>
     <ToastContainer />
     <Navigation />
     <Outlet />

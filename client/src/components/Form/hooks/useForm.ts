@@ -15,7 +15,7 @@ const useForm = ()=>{
 
 
       const {data,mutateUser,isSuccess} =  useRegisterUser()
-      const {data:loginResponse,isError:loginError, isSuccess: loginSuccess,isLoading:loginLoading,mutateUserLogin} = useLoginUser()
+      const {data:loginResponse,isError:loginError, isSuccess: loginSuccess,isLoading:loginLoading,mutateUserLogin,error} = useLoginUser()
 
     const handleSetIsSignup = (e: React.MouseEvent<HTMLSpanElement, MouseEvent>) => {
         e.preventDefault()
@@ -58,7 +58,7 @@ const useForm = ()=>{
                 mutateUserLogin(existingUser)
             }
 
-            return {isOnSignupPage, userInfo,handleSetIsSignup,handleInputEmail,handleInputName,handleInputPass, handleSubmit,data,isSuccess,loginResponse, loginError, loginLoading,loginSuccess}
+            return {isOnSignupPage, userInfo,handleSetIsSignup,handleInputEmail,handleInputName,handleInputPass, handleSubmit,data,isSuccess,loginResponse, loginError, loginLoading,loginSuccess,error}
 }
 
 export default useForm
