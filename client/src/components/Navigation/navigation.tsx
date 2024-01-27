@@ -18,7 +18,7 @@ const {handleGetToLoginPage,handleLogOut} = useNavUtils()
         <p className="mr-4"> {user ?  user.email : "Sign up"}</p>
         {user && <p onClick={()=> handleLogOut()}>Logout</p>} 
         {!user && <p onClick={()=> handleGetToLoginPage()} className="">Login</p>}
-    { user &&    <div className="w-[30px] h-[30px] rounded-full bg-white text-white text-sm text-center pt-1 font-black bg-sky-400">
+    { user &&    <div className="w-[30px] h-[30px] rounded-full  text-white text-sm text-center pt-1 font-black bg-sky-400">
         {pierceWord({name: user.name})}
         </div>}
         </div>

@@ -5,23 +5,42 @@ import { toast } from "react-toastify"
 import { useNavigate } from "react-router-dom"
 
 
+
 const Formic  = ()=>{
 
-const {handleInputEmail,handleInputName,handleInputPass,handleSetIsSignup,isOnSignupPage,userInfo, handleSubmit, data,isSuccess, loginResponse, loginSuccess,loginError, error} =  useForm()
+const {handleInputEmail,handleInputName,handleInputPass,handleSetIsSignup,isOnSignupPage, handleSubmit, loginResponse, registerResponse} =  useForm()
 
 const userContext =  useContext(userInfoContext)
 const navigate  =  useNavigate()
 
 useEffect(()=>{
-    if(loginResponse &&  loginSuccess){
-    toast(`Welcome Back ${loginResponse.name}`);
-    userContext?.setUserInfo(loginResponse) 
-    localStorage.setItem("userinfo", JSON.stringify(loginResponse)) 
-    navigate("/me")
-    window.location.reload()
-    
+    if(loginResponse){
+      if(loginResponse.status === 200){
+        toast(`Welcome Back ${loginResponse?.name}`);
+        userContext?.setUserInfo(loginResponse) 
+        localStorage.setItem("userinfo", JSON.stringify(loginResponse)) 
+        navigate("/me")
+        console.log(loginResponse)
+        window.location.reload()
+        return
+      }
+      toast(`${loginResponse.message}`);
     }
-}, [loginSuccess,loginError,])
+  
+}, [loginResponse])
+
+
+useEffect(()=>{
+  if(registerResponse){
+    if(registerResponse && registerResponse.status === 404){
+      toast(`${registerResponse.message}`);
+    return 
+    }
+    isOnSignupPage?.setIsOnSignupPageCallback(!isOnSignupPage.isUserOnSignUpPage)
+  }
+
+}, [registerResponse])
+
 
 // console.log(data)
 // console.log(loginResponse)

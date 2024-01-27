@@ -14,8 +14,8 @@ const useForm = ()=>{
       })
 
 
-      const {data,mutateUser,isSuccess} =  useRegisterUser()
-      const {data:loginResponse,isError:loginError, isSuccess: loginSuccess,isLoading:loginLoading,mutateUserLogin,error} = useLoginUser()
+      const {mutateUser,isSuccess,registerResponse,registerError} =  useRegisterUser()
+      const {isLoading:loginLoading,mutateUserLogin, loginResponse} = useLoginUser()
 
     const handleSetIsSignup = (e: React.MouseEvent<HTMLSpanElement, MouseEvent>) => {
         e.preventDefault()
@@ -51,14 +51,14 @@ const useForm = ()=>{
             const handleSubmit = (e:  React.FormEvent<HTMLFormElement>)=>{
                 e.preventDefault()
                 if(isOnSignupPage?.isUserOnSignUpPage){
-                    mutateUser(userInfo)
-                   return  isOnSignupPage?.setIsOnSignupPageCallback(!isOnSignupPage.isUserOnSignUpPage)
+                  mutateUser(userInfo)
+                   return  
                 }
                 let existingUser = {email:userInfo.email, password: userInfo.password}
                 mutateUserLogin(existingUser)
             }
 
-            return {isOnSignupPage, userInfo,handleSetIsSignup,handleInputEmail,handleInputName,handleInputPass, handleSubmit,data,isSuccess,loginResponse, loginError, loginLoading,loginSuccess,error}
+            return {isOnSignupPage, userInfo,handleSetIsSignup,handleInputEmail,handleInputName,handleInputPass, handleSubmit,isSuccess,loginResponse, loginLoading,registerResponse,registerError}
 }
 
 export default useForm
