@@ -1,25 +1,15 @@
 
 import { useMutation} from "react-query"
 import {ENDPOINT } from "../../../constants/endpoints"
-import axiosInstance from "../../../services/axiosInstance"
+import axiosInstance from "../../../utils/axiosInstance"
 import { useState } from "react"
+import { loginUser } from "../../../services/auth/login"
 
-const loginUser = async(userPayload: { email: string, password: string})=>{
-    try{
-        let response = await axiosInstance.post(`${ENDPOINT.login}`, userPayload)
-        console.log(response.data)
-        return response.data
-    }
-    catch(e){
-        // @ts-ignore
-        return e.response.data
-    }
 
-}
 const useLoginUser = ()=>{
     const [loginResponse,setLoginResponse] = useState<any>()
     let [errorResponse , setErrorResponse] =  useState<{message: string}>()
-    const {isError,isLoading,isSuccess,mutate,error} = useMutation("#registeruser", loginUser)
+    const {isError,isLoading,isSuccess,mutate} = useMutation("#registeruser", loginUser)
 
     const mutateUserLogin = (userPayload: {email: string, password: string})=>{
     mutate(userPayload, {
@@ -31,7 +21,7 @@ const useLoginUser = ()=>{
         }
     })
     }
-    return {isError,isLoading,isSuccess, mutateUserLogin, loginResponse,}
+    return {isError,isLoading,isSuccess, mutateUserLogin, loginResponse}
 }
 
 export default useLoginUser

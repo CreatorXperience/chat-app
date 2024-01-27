@@ -1,7 +1,7 @@
 let ROUTES = {
     home: "/",
-    login: "/login",
-    signup: "/signup"
+    register: "/register",
+    me: "/me"
 }
 
 

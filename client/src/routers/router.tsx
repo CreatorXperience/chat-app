@@ -1,18 +1,19 @@
 import { createBrowserRouter } from "react-router-dom";
 import App from "../App/App";
 import Formic from "../components/Form";
+import ROUTES from "../constants/routes";
 
 
     let router = createBrowserRouter([
         {
-            path: "/",
+            path: ROUTES.home,
             element: <App />,
             children: [
                 {
-                    path: "/register",
+                    path: ROUTES.register,
                     element: <Formic />
                 },{
-                    path: "/me",
+                    path: ROUTES.me,
                     element: <div>THis is me</div>
                  }
             ]
