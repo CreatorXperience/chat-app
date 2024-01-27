@@ -25,12 +25,16 @@ const connectToMongoDBDatabase = (server, port) => __awaiter(void 0, void 0, voi
     }
     try {
         yield mongoose_1.default.connect(URI);
+        let responseHeaders = {
+            allowedHeaders: ['Accept-Version', 'Authorization', 'Credentials', 'Content-Type'],
+            exposedHeaders: ['Authorization']
+        };
         server.listen(port, () => {
             connectionLogger_1.default.info("connected to mongodb server successfully");
         });
         server.use(express_1.default.json());
         server.use(express_1.default.urlencoded({ extended: true }));
-        server.use((0, cors_1.default)());
+        server.use((0, cors_1.default)(responseHeaders));
         server.use("/api/signup", signup_1.default);
         server.use("/api/login", auth_1.default);
         server.get("/", (req, res) => {

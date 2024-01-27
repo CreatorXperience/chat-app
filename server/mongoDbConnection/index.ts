@@ -15,13 +15,18 @@ const connectToMongoDBDatabase = async(server: any, port: number | string)=>{
     }
     try{
       await mongoose.connect(URI)
+
+      let responseHeaders  = {
+allowedHeaders: ['Accept-Version', 'Authorization', 'Credentials', 'Content-Type'],
+  exposedHeaders: ['Authorization']
+      }
         server.listen(port, ()=>{
             connectionLogger.info("connected to mongodb server successfully")
         })
 
         server.use(express.json())
         server.use(express.urlencoded({extended:true}))
-        server.use(cors())
+        server.use(cors(responseHeaders))
         server.use("/api/signup", signupUser)
         server.use("/api/login", loginUser)
 

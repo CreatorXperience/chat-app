@@ -19,18 +19,19 @@ const lodash_1 = __importDefault(require("lodash"));
 const loginUser = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     let { error } = yield (0, authValidation_1.default)(req.body);
     if (error) {
-        return res.status(404).send({ message: error.details[0].message });
+        return res.status(404).send({ message: error.details[0].message, status: 404 });
     }
     let user = yield signupModel_1.default.findOne({ email: req.body.email });
     if (!user) {
-        return res.status(404).send({ message: "user doesn't exist" });
+        return res.status(404).send({ message: "user doesn't exist", status: 404 });
     }
     let isPassEqual = yield bcryptjs_1.default.compare(req.body.password, user.password);
     if (!isPassEqual) {
-        return res.status(404).send({ message: "Invalid email or password" });
+        return res.status(404).send({ message: "Invalid email or password", status: 404 });
     }
     let token = user.generateToken();
-    res.setHeader("Authorization", token)
-        .send(lodash_1.default.pick(user, ["name", "email", "_id"]));
+    let userResponse = Object.assign(Object.assign({}, lodash_1.default.pick(user, ["name", "email", "_id"])), { token: token, status: 200 });
+    res.appendHeader("Authorization", token)
+        .send(userResponse);
 });
 exports.default = loginUser;
