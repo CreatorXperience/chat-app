@@ -38,8 +38,6 @@ function App() {
   },[userInfo])
 
 
-
-
 useEffect(()=>{
   if(user){
   navigate("/me")
