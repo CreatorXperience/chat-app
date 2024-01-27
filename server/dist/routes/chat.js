@@ -14,15 +14,17 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 const express_1 = __importDefault(require("express"));
 const chatModel_1 = __importDefault(require("../models/chatModel"));
+const authMiddleware_1 = __importDefault(require("../middlewares/authMiddleware"));
 const router = express_1.default.Router();
-router.post("/:firstId/:secondId", (req, res) => __awaiter(void 0, void 0, void 0, function* () {
-    let { firstId, secondId } = req.params;
-    let chat = yield chatModel_1.default.findOne({ members: { $all: [firstId, secondId] } });
+router.post("/:secondId", authMiddleware_1.default, (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    let { secondId } = req.params;
+    let userId = req.userId;
+    let chat = yield chatModel_1.default.findOne({ members: { $all: [userId, secondId] } });
     if (chat) {
         return res.status(404).send(chat);
     }
     let newChat = new chatModel_1.default({
-        members: [firstId, secondId]
+        members: [userId, secondId]
     });
     let savedChat = yield newChat.save();
     if (!savedChat) {
@@ -30,4 +32,21 @@ router.post("/:firstId/:secondId", (req, res) => __awaiter(void 0, void 0, void 
     }
     res.send(savedChat);
 }));
-router.get("");
+router.get("/", authMiddleware_1.default, (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    let userId = req.userId;
+    let chats = yield chatModel_1.default.find({ members: { $in: userId } });
+    if (chats.length < 1) {
+        return res.status(404).send({ message: "chat not found" });
+    }
+    return res.send(chats);
+}));
+router.get("/single/:secondId", authMiddleware_1.default, (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    let { secondId } = req.params;
+    let userId = req.userId;
+    let chat = yield chatModel_1.default.findOne({ members: { $all: [userId, secondId] } });
+    if (chat) {
+        return res.status(404).send(chat);
+    }
+    res.status(404).send({ message: "No chat found" });
+}));
+exports.default = router;
