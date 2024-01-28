@@ -6,6 +6,7 @@ import cors from "cors"
 import signupUser from "../routes/signup"
 import loginUser from "../routes/auth"
 import chat from  "../routes/chat"
+import message from "../routes/message"
 
 
 const connectToMongoDBDatabase = async(server: any, port: number | string)=>{
@@ -31,6 +32,7 @@ allowedHeaders: ['Accept-Version', 'Authorization', 'Credentials', 'Content-Type
         server.use("/api/signup", signupUser)
         server.use("/api/login", loginUser)
         server.use("/api/chats", chat )
+        server.use("/api/messages", message)
 
         server.get("/", (req:Request,res: Response)=>{
             res.send("welcome to this api")

@@ -19,6 +19,7 @@ const cors_1 = __importDefault(require("cors"));
 const signup_1 = __importDefault(require("../routes/signup"));
 const auth_1 = __importDefault(require("../routes/auth"));
 const chat_1 = __importDefault(require("../routes/chat"));
+const message_1 = __importDefault(require("../routes/message"));
 const connectToMongoDBDatabase = (server, port) => __awaiter(void 0, void 0, void 0, function* () {
     let URI = process.env.URI;
     if (!URI) {
@@ -39,6 +40,7 @@ const connectToMongoDBDatabase = (server, port) => __awaiter(void 0, void 0, voi
         server.use("/api/signup", signup_1.default);
         server.use("/api/login", auth_1.default);
         server.use("/api/chats", chat_1.default);
+        server.use("/api/messages", message_1.default);
         server.get("/", (req, res) => {
             res.send("welcome to this api");
         });
