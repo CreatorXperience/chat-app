@@ -14,15 +14,9 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.getSingleChat = exports.getChats = exports.createChat = void 0;
 const chatModel_1 = __importDefault(require("../../models/chatModel"));
-const joi_1 = __importDefault(require("joi"));
-const validation = (payload) => {
-    const schema = joi_1.default.object({
-        secondUserId: joi_1.default.string().required()
-    });
-    return schema.validate(payload);
-};
+const chatValidation_1 = __importDefault(require("./chatValidation"));
 const createChat = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
-    const { error } = validation(req.body);
+    const { error } = (0, chatValidation_1.default)(req.body);
     if (error) {
         return res.status(404).send({ message: error.details[0].message });
     }

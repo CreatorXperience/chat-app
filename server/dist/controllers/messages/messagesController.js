@@ -13,19 +13,11 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.getMessages = exports.postMessages = void 0;
-const joi_1 = __importDefault(require("joi"));
 const messagesModel_1 = __importDefault(require("../../models/messagesModel"));
 const mongoose_1 = __importDefault(require("mongoose"));
-const messageValidation = (messagePayload) => {
-    const schema = joi_1.default.object({
-        chatId: joi_1.default.string().required(),
-        senderId: joi_1.default.string().required(),
-        text: joi_1.default.string().required()
-    });
-    return schema.validate(messagePayload);
-};
+const messageValidation_1 = __importDefault(require("./messageValidation"));
 const postMessages = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
-    const { error } = messageValidation(req.body);
+    const { error } = (0, messageValidation_1.default)(req.body);
     if (error) {
         return res.status(404).send({ message: error.details[0].message });
     }

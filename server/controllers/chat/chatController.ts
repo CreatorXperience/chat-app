@@ -1,14 +1,9 @@
 import { Request, Response } from "express"
 import ChatModel from "../../models/chatModel"
 import Joi from "joi"
+import validation from "./chatValidation"
 
-const validation = (payload: {secondUserId: string})=>{
-    const schema = Joi.object({
-        secondUserId: Joi.string().required()
-    })
 
-   return  schema.validate(payload)
-}
 const  createChat = async (req: Request & {userId?: string},res:Response)=>{
   const {error}  =  validation(req.body)
     if(error){

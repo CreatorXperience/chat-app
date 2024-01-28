@@ -2,22 +2,9 @@ import { Request, Response } from "express";
 import Joi from "joi";
 import MessageModel from "../../models/messagesModel";
 import mongoose from "mongoose";
+import messageValidation from "./messageValidation";
 
 
-type TChat = {
-    chatId: string,
-    senderId: string,
-    text: string
-}
-const messageValidation = (messagePayload: TChat)=>{
-    const schema = Joi.object({
-        chatId: Joi.string().required(),
-        senderId: Joi.string().required(),
-        text: Joi.string().required()
-    })
-
-  return   schema.validate(messagePayload)
-}
 
 const postMessages  = async (req:Request, res: Response)=>{
     const {error} = messageValidation(req.body)
