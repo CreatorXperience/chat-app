@@ -1,6 +1,5 @@
 import { Request, Response } from "express"
 import ChatModel from "../../models/chatModel"
-import Joi from "joi"
 import validation from "./chatValidation"
 
 
