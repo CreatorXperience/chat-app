@@ -4,7 +4,9 @@ import { ENDPOINT } from "../../constants/endpoints"
 import { toast } from "react-toastify"
 import { useState } from "react"
 
+
 const useGetChat = ()=>{
+    const [isEnabled,setIsEnabled] =  useState(false)
     const getChat = async ()=>{
         let token  = localStorage.getItem("userinfo")
         if(token){
@@ -24,13 +26,14 @@ const useGetChat = ()=>{
         }
     }
     }
-    
+
     const  {data, isError, isLoading,refetch} = useQuery("get-users",getChat, {
-        staleTime:2000,
-        cacheTime: 2000, refetchOnWindowFocus: true
+        staleTime:20000,
+        cacheTime: 20000, refetchOnWindowFocus: true,
+        enabled: isEnabled
     })
 
-    return {data, isError, isLoading, refetch}
+    return {data, isError, isLoading, refetch, setIsEnabled}
 }
 
 
