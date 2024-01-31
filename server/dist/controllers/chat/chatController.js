@@ -23,7 +23,7 @@ const createChat = (req, res) => __awaiter(void 0, void 0, void 0, function* () 
     let userId = req.userId;
     let chat = yield chatModel_1.default.findOne({ members: { $all: [userId, req.body.secondUserId] } });
     if (chat) {
-        return res.status(404).send(chat);
+        return res.status(200).send(chat);
     }
     let newChat = new chatModel_1.default({
         members: [userId, req.body.secondUserId]

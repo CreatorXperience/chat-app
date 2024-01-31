@@ -11,7 +11,7 @@ const  createChat = async (req: Request & {userId?: string},res:Response)=>{
     let userId = req.userId
     let chat  =  await ChatModel.findOne({members: {$all: [userId,req.body.secondUserId] }})
     if(chat){
-        return res.status(404).send(chat)
+        return res.status(200).send(chat)
     }
 
     let newChat = new ChatModel({

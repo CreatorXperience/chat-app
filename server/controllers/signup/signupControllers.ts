@@ -1,8 +1,8 @@
 import { Request, Response } from "express"
-import _ from "lodash"
 import signupValidation from "./signupValidation"
 import SignupModel from "../../models/signupModel"
 import bcrypt from "bcryptjs"
+import _ from "lodash"
 
 
 const registerUser = async (req:Request,res:Response)=>{
@@ -28,4 +28,23 @@ const registerUser = async (req:Request,res:Response)=>{
     res.send(_.pick(saved, ["_id", "name","email"]))
     }
 
-    export default registerUser
+
+
+    const getUser = async (req:Request,res:Response)=>{
+        let users = await SignupModel.find({}, {password: 0})
+        if(!users){
+            return res.status(404).send({message: "No user"})
+        }
+        res.send(users)
+        
+    }
+
+    const getSingleUser = async(req:Request,res:Response)=>{
+        let {id} = req.params
+        let user = await SignupModel.findOne({_id: id}, {password: 0})
+        if(!user){
+            return res.status(404).send({message: "user not found"})
+        }
+        res.send(user)
+    }
+        export {registerUser, getUser,getSingleUser}

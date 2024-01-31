@@ -1,9 +1,12 @@
 import express from "express"
-import registerUser from "../controllers/signup/signupControllers"
+import { getSingleUser, getUser, registerUser } from "../controllers/signup/signupControllers"
+
 
 const router = express.Router()
 
 router.post("/", registerUser)
+router.get("/users", getUser)
+router.get("/user/:id", getSingleUser)
 
 
 

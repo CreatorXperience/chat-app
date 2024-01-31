@@ -12,10 +12,11 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-const lodash_1 = __importDefault(require("lodash"));
+exports.getSingleUser = exports.getUser = exports.registerUser = void 0;
 const signupValidation_1 = __importDefault(require("./signupValidation"));
 const signupModel_1 = __importDefault(require("../../models/signupModel"));
 const bcryptjs_1 = __importDefault(require("bcryptjs"));
+const lodash_1 = __importDefault(require("lodash"));
 const registerUser = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     let { error } = (0, signupValidation_1.default)(req.body);
     if (error) {
@@ -35,4 +36,21 @@ const registerUser = (req, res) => __awaiter(void 0, void 0, void 0, function* (
     }
     res.send(lodash_1.default.pick(saved, ["_id", "name", "email"]));
 });
-exports.default = registerUser;
+exports.registerUser = registerUser;
+const getUser = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    let users = yield signupModel_1.default.find({}, { password: 0 });
+    if (!users) {
+        return res.status(404).send({ message: "No user" });
+    }
+    res.send(users);
+});
+exports.getUser = getUser;
+const getSingleUser = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    let { id } = req.params;
+    let user = yield signupModel_1.default.findOne({ _id: id }, { password: 0 });
+    if (!user) {
+        return res.status(404).send({ message: "user not found" });
+    }
+    res.send(user);
+});
+exports.getSingleUser = getSingleUser;
