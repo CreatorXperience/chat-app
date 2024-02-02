@@ -20,8 +20,9 @@ const signup_1 = __importDefault(require("../routes/signup"));
 const auth_1 = __importDefault(require("../routes/auth"));
 const chat_1 = __importDefault(require("../routes/chat"));
 const message_1 = __importDefault(require("../routes/message"));
-const connectToMongoDBDatabase = (server, port) => __awaiter(void 0, void 0, void 0, function* () {
+const connectToMongoDBDatabase = (server, io, port) => __awaiter(void 0, void 0, void 0, function* () {
     let URI = process.env.URI;
+    let onlineUsers = [];
     if (!URI) {
         return console.log("URI not provided");
     }
@@ -43,6 +44,29 @@ const connectToMongoDBDatabase = (server, port) => __awaiter(void 0, void 0, voi
         server.use("/api/messages", message_1.default);
         server.get("/", (req, res) => {
             res.send("welcome to this api");
+        });
+        // io.use((socket: Socket & {token?: string}, next)=>{
+        //     if(!socket.handshake.auth.token){
+        //        return    next(new Error("token not found"))
+        //     }
+        //     socket.token = socket.handshake.auth.token
+        //     next()
+        // })
+        io.listen(8080);
+        io.on("connection", (socket) => {
+            console.log("connected to socket successfully", socket.id);
+            socket.on("add", (userId) => {
+                !onlineUsers.some((user) => user.userId == userId) &&
+                    onlineUsers.push({
+                        userId,
+                        socketId: socket.id
+                    });
+                io.emit("online-users", onlineUsers);
+            });
+            socket.on("disconnect", () => {
+                let online = onlineUsers.filter((user) => user.socketId !== socket.id);
+                io.emit("online-users", online);
+            });
         });
     }
     catch (err) {

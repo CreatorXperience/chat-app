@@ -16,16 +16,16 @@ const fetchAllChats = async(id: string)=>{
 }
 
 const useGetAllUserChats = ()=>{
-    const [chat, setChat] = useState<[string]>([""])
-    const results = useQueries(chat.map((id)=>{
-        return {queryKey: ["chat", id], queryFn: () => fetchAllChats(id), enabled: !!chat}
+    const [chatId, setChatId] = useState<Array<string>>([])
+    const results = useQueries(chatId.map((id)=>{
+        return {queryKey: ["chat", id], queryFn: () => fetchAllChats(id), enabled: !!chatId}
     }))
 
     let response = results.map((data)=>{
       return  data.data
     })
 
-    return {response, setChat}
+    return {response, setChatId}
 }
 
 export default useGetAllUserChats

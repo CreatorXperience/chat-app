@@ -2,7 +2,7 @@ import mongoose from "mongoose";
 
 
 let chatSchema = new mongoose.Schema({
-    members: {type: Array}
+    members: [{type: mongoose.Schema.Types.ObjectId, ref: "users"}]
 }, {timestamps: true})
 
 

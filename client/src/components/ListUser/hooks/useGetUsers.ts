@@ -15,7 +15,7 @@ const useGetUsers = ()=>{
             return  null
         }
     }
-    const {data, isError, isLoading} =  useQuery("users", getUsers, {
+    const {data, isError} =  useQuery("users", getUsers, {
         staleTime: 5000,
         cacheTime: 5000,
         enabled: true,

@@ -7,11 +7,13 @@ import signupUser from "../routes/signup"
 import loginUser from "../routes/auth"
 import chat from  "../routes/chat"
 import message from "../routes/message"
+import { DefaultEventsMap } from "socket.io/dist/typed-events"
+import { Server, Socket } from "socket.io"
 
 
-const connectToMongoDBDatabase = async(server: any, port: number | string)=>{
+const connectToMongoDBDatabase = async(server: any, io: Server<DefaultEventsMap, DefaultEventsMap, DefaultEventsMap, any>, port: number | string)=>{
     let URI =  process.env.URI 
-   
+    let onlineUsers:Array<{userId: string, socketId: string}> = []
     if(!URI){
         return console.log("URI not provided")
     }
@@ -37,6 +39,44 @@ allowedHeaders: ['Accept-Version', 'Authorization', 'Credentials', 'Content-Type
         server.get("/", (req:Request,res: Response)=>{
             res.send("welcome to this api")
         })
+
+
+
+        // io.use((socket: Socket & {token?: string}, next)=>{
+        //     if(!socket.handshake.auth.token){
+        //        return    next(new Error("token not found"))
+        //     }
+        //     socket.token = socket.handshake.auth.token
+        //     next()
+
+        // })
+
+        io.listen(8080)
+
+        io.on("connection",  (socket)=>{
+           console.log("connected to socket successfully", socket.id)
+
+
+           socket.on("add",(userId)=> {
+            !onlineUsers.some((user)=> user.userId ==  userId )  && 
+            onlineUsers.push({
+                userId, 
+                socketId: socket.id
+            })
+
+            io.emit("online-users", onlineUsers)
+           })
+
+           socket.on("disconnect", ()=>{
+   let online = onlineUsers.filter((user)=> user.socketId !== socket.id)
+   
+   io.emit("online-users", online)
+           })
+        })
+
+
+
+        
     }
     catch(err){
         console.log("error couldn't connect to mongodb database", err)

@@ -1,14 +1,12 @@
 
 import { useMutation} from "react-query"
-import {ENDPOINT } from "../../../constants/endpoints"
-import axiosInstance from "../../../utils/axiosInstance"
 import { useState } from "react"
 import { loginUser } from "../../../services/auth/login"
 
 
 const useLoginUser = ()=>{
     const [loginResponse,setLoginResponse] = useState<any>()
-    let [errorResponse , setErrorResponse] =  useState<{message: string}>()
+    let [errorResponse, setErrorResponse] =  useState<{message: string}>()
     const {isError,isLoading,isSuccess,mutate} = useMutation("#registeruser", loginUser)
 
     const mutateUserLogin = (userPayload: {email: string, password: string})=>{
@@ -21,7 +19,7 @@ const useLoginUser = ()=>{
         }
     })
     }
-    return {isError,isLoading,isSuccess, mutateUserLogin, loginResponse}
+    return {isError,isLoading,isSuccess, mutateUserLogin, loginResponse,errorResponse}
 }
 
 export default useLoginUser

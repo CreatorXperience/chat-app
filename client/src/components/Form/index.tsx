@@ -27,7 +27,7 @@ useEffect(()=>{
       toast(`${loginResponse.message}`);
     }
   
-}, [loginResponse])
+}, [loginResponse, navigate, userContext])
 
 
 useEffect(()=>{
@@ -54,7 +54,7 @@ useEffect(()=>{
         <input  className="w-[80%] my-4 py-2 px-6 rounded-sm" type="email" placeholder="Email" onChange={(e)=> handleInputEmail(e)}/> 
         <input className="w-[80%] py-2 px-6 rounded-sm" type="password" placeholder="Password"  onChange={(e)=> handleInputPass(e)}/>
         <button className="w-[80%] mt-5 py-2 px-6 rounded-sm bg-cyan-600 text-white" type="submit">{isOnSignupPage && isOnSignupPage.isUserOnSignUpPage? "Register?": "Login"}</button>
-        <a className="text-white pt-10" href="#"> {isOnSignupPage && isOnSignupPage.isUserOnSignUpPage ? "Already have an account?": "Don'thave an account?"}  <span className="text-cyan-600" onClick={(e)=> handleSetIsSignup(e)}>{isOnSignupPage && isOnSignupPage.isUserOnSignUpPage? "Sign in": "Sign up"}</span></a>
+        <a className="text-white pt-10" href="/signup"> {isOnSignupPage && isOnSignupPage.isUserOnSignUpPage ? "Already have an account?": "Don'thave an account?"}  <span className="text-cyan-600" onClick={(e)=> handleSetIsSignup(e)}>{isOnSignupPage && isOnSignupPage.isUserOnSignUpPage? "Sign in": "Sign up"}</span></a>
         </form>
       </div>
 

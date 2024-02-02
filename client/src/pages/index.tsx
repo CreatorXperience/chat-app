@@ -1,102 +1,30 @@
-import { useEffect, useMemo, useState } from "react"
 import Chat from "../components/Chat"
 import ListUser from "../components/ListUser"
-import useGetUsers from "../components/ListUser/hooks/useGetUsers"
-import useCreateChat from "./hooks/useCreateChat"
-import useGetChat from "./hooks/useGetChat"
-import useGetAllUserChats from "./hooks/useGetAllChat"
 import chatImage from "../images/chatimage.png"
-import useGetUser from "../App/hooks/useGetUser"
+import useStartUp from "./hooks/useStartup"
 
-
-
-type TChat = {
-        name: string,
-        _id: string,
-        email: string
-}
 
 const Home = ()=>{
-    let {data:users} = useGetUsers()
-    const {mutateChat,response,} =  useCreateChat()
-    const {data:chats, refetch,setIsEnabled} =  useGetChat()
-    const [selectChat, setselectChat]=  useState<TChat | null>(null)
-    const [newUsers, setNewUsers] = useState<[]>() 
-    const {user:loggedInUser} = useGetUser()
-    
-    const ids = chats && chats.map((data: {members: string[]})=> {
-        return data.members && data.members[1]
-    })
+   const {mutateChat, selectChat, setselectChat, onlineUsers,activeUser,handleSendMessage,handleUpdateMessage} =  useStartUp()
 
-    const {response:data, setChat} = useGetAllUserChats()
-
-    const memoizedId = useMemo(()=>{
-        return ids
-    },[chats])
-
-
-    useEffect(()=>{
-if(ids){
-    setChat(memoizedId)
-}
-    }, [chats, ids])
- 
-
-    useEffect(()=>{
-        if(response)
-  refetch()
-    },[response])
-
-
-    useEffect(()=>{
-if(users && memoizedId){
-    let user = filterUsers().filter((item:any)=> item !== undefined).filter((item: any)=>item && item._id !== loggedInUser?._id)
-    setNewUsers(user)
-}
-else {
-    setIsEnabled(true)
-}
-
-    }, [users, memoizedId])
-
-
-
-    const filterUsers = ()=>{
-      let newUsers =   users.map((item:any, index:number)=>  {
-        if(!ids.includes(item._id)){
-            return item 
-        }
-      })
-
-      return  newUsers
-     
-    }
-
-   const  filterData = ()=>{
-    return data.filter((item: any)=> item &&  item._id !== loggedInUser?._id)
-   }
-
-    // console.log(data)
-    // console.log(ids)
-    console.log(chats)
-
-
+   console.log(activeUser)
+   console.log(selectChat)
 
     return (
         <div className="w-[100%] flex justify-center"> 
         <div className="w-[90%] h-[auto] bg-slate-800 mt-10 rounded-md">
          <div className="w-[100%] scroll-auto flex mt-4 px-10  ">
-         {newUsers && newUsers.map((user: {_id: string, email: string, name: string, password: string})=>{
-            console.log(user)
-               return <ListUser key={user._id} user={user} mutateUser={mutateChat}  />
+         {activeUser && activeUser.map((user: {_id: string, email: string, name: string, password: string, isChatCreated: boolean})=>{
+               return <ListUser onlineUsers={onlineUsers} key={user._id} user={user} displayChat={setselectChat}  />
             })}
             </div>
           <div className="w-[100%] h-[75vh] mt-5 flex justify-between px-10 py-4 rounded-md">
-        <div className={`all_chats w-[28%] h-[100%] bg-slate-700 rounded-md`}>
-    {data && filterData().map((item: {name: string, email: string,_id: string})=>{
-        return <Chat key={item &&item._id} data={item} selectChat={setselectChat}/>
+        <div className={`all_chats  w-[28%] h-[100%] bg-slate-700 rounded-md`}>
+    {selectChat &&   <Chat key={selectChat._id} data={selectChat} selectChat={setselectChat}/>}
+    
+    {activeUser &&  activeUser.map((item:any)=> {
+        return  <Chat key={item._id} data={item} selectChat={setselectChat}/>
     })}
-
         </div>
        {selectChat &&  <div className={`chats ${selectChat? "w-[70%]": "w-[0px]"} h-[100%] bg-slate-600 rounded-md`}>
             <div className="nav w-[100%] h-[70px] bg-slate-700 flex text-xl text-white p-4">
@@ -113,15 +41,15 @@ else {
 
             </div>
 
-            <form className="w-[100%] h-[10%] flex jutify-between items-center bg-slate-700">
-            <input type="text" className="w-[85%] h-10 bg-slate-600 outline-none px-4 text-white  mx-4 py-2 rounded-full"   placeholder="message"/>
+            <form className="w-[100%] h-[10%] flex jutify-between items-center bg-slate-700" onSubmit={(e)=>handleSendMessage(e, selectChat._id)}>
+            <input type="text" className="w-[85%] h-10 bg-slate-600 outline-none px-4 text-white  mx-4 py-2 rounded-full" onChange={(e)=>handleUpdateMessage(e)}   placeholder="message"/>
             <button type="submit" className="w-[50px] h-[50px] rounded-full bg-green-200"><i className="fa-regular fa-paper-plane"></i></button>
             </form>
 
         </div>}
 
         {!selectChat  ? <div className="container flex justify-center flex-col items-center w-[100%] h-[100%] bg-slate-900"> 
-   <img src={chatImage} />
+   <img src={chatImage}  alt="chat-icon"/>
    <div className="text-white text-3xl ">Chat App</div>
    <div className="text-white text md py-4">Send and recieve messages online</div>
         </div>: ""}

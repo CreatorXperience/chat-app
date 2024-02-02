@@ -26,11 +26,11 @@ function App() {
     _id: ""
   })
 
-  let setIsOnSignupPageCallback =  useCallback(setIsOnSignUpPage, [])
+  let setIsOnSignupPageCallback =  useCallback(setIsOnSignUpPage, [setIsOnSignUpPage])
 
   let isOnSignUpPageValue = useMemo(()=>{
     return {isUserOnSignUpPage,setIsOnSignupPageCallback}
-  },[isUserOnSignUpPage])
+  },[isUserOnSignUpPage, setIsOnSignupPageCallback])
   
 
   let userInfoValue =  useMemo(()=>{
@@ -45,7 +45,7 @@ useEffect(()=>{
     else{
 navigate("/register")
     }
-},[user])
+},[user, navigate])
 
 
   return (

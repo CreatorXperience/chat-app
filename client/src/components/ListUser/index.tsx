@@ -1,18 +1,40 @@
+import { useEffect } from "react";
+import pierceWord from "../../utils/pieceWord"
+import useGetUser from "../../App/hooks/useGetUser";
+
+
+type TChat = {
+  name: string,
+  _id: string,
+  email: string
+} 
 
 type TUser = {
   user: {
     password: string,
     email: string,
    _id: string,
-   name: string
+   name: string,
+   isChatCreated: boolean,
+   online?: boolean 
   },
- mutateUser:(userId: string) => void
+ displayChat:React.Dispatch<React.SetStateAction<TChat | null>>
+ onlineUsers: {
+  userId: string;
+  socketId: string;
+}[] |  undefined
 }
-const ListUser = ({user, mutateUser}: TUser)=>{
+const ListUser = ({user, displayChat, onlineUsers}: TUser)=>{
+
+  const {user: loggedInUser} =  useGetUser()
+
     return (
-        <div className="user_container" onClick={()=> {mutateUser(user._id)}}>
-        <button className="w-[100px] p-4 bg-green-200 rounded-lg mx-2">{user.name}</button>
-       </div>
+      <div>
+       {user.isChatCreated ===false && user._id !== loggedInUser?._id ? <div className="user_container relative" onClick={()=> {displayChat(user)}}>
+        <button className="w-[50px] h-[50px]  p-2 bg-blue-200 outline-dashed outline-offset-2   outline-blue-500 rounded-full mx-2">{pierceWord({name:user.name})}</button>
+       {user.online? <div className={`w-[10px] h-[10px] bg-blue-500  absolute right-0 top-0 px-2 py-2 rounded-full`}> </div>: ""}
+       </div>: ""}
+      </div> 
     )
 }
 
