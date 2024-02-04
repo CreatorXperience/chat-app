@@ -3,7 +3,8 @@ const ENDPOINT =  {
     login: "/api/login",
     users: "/api/signup/users",
     chats: "/api/chats",
-    allUserChats: "/api/signup/user"
+    allUserChats: "/api/signup/user",
+    messages: "/api/messages"
 }
 const DEFAULT_URL = "http://localhost:5000"
 

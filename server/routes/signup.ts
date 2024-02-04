@@ -6,7 +6,7 @@ const router = express.Router()
 
 router.post("/", registerUser)
 router.get("/users", getUser)
-router.get("/user/:id", getSingleUser)
+router.get("/user/:id/:chatId", getSingleUser)
 
 
 

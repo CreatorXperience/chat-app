@@ -46,11 +46,11 @@ const getUser = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
 });
 exports.getUser = getUser;
 const getSingleUser = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
-    let { id } = req.params;
+    let { id, chatId } = req.params;
     let user = yield signupModel_1.default.findOne({ _id: id }, { password: 0 });
     if (!user) {
         return res.status(404).send({ message: "user not found" });
     }
-    res.send(user);
+    res.send(Object.assign(Object.assign({}, user), { chatId: chatId }));
 });
 exports.getSingleUser = getSingleUser;

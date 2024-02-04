@@ -5,9 +5,9 @@ import useStartUp from "./hooks/useStartup"
 
 
 const Home = ()=>{
-   const {mutateChat, selectChat, setselectChat, onlineUsers,activeUser,handleSendMessage,handleUpdateMessage} =  useStartUp()
+   const {selectChat, setselectChat, onlineUsers,activeUser,handleSendMessage,handleUpdateMessage, mutateChat} =  useStartUp()
 
-   console.log(activeUser)
+
    console.log(selectChat)
 
     return (
@@ -15,12 +15,12 @@ const Home = ()=>{
         <div className="w-[90%] h-[auto] bg-slate-800 mt-10 rounded-md">
          <div className="w-[100%] scroll-auto flex mt-4 px-10  ">
          {activeUser && activeUser.map((user: {_id: string, email: string, name: string, password: string, isChatCreated: boolean})=>{
-               return <ListUser onlineUsers={onlineUsers} key={user._id} user={user} displayChat={setselectChat}  />
+               return <ListUser onlineUsers={onlineUsers} key={user._id} user={user} displayChat={setselectChat} mutate={mutateChat}  />
             })}
             </div>
           <div className="w-[100%] h-[75vh] mt-5 flex justify-between px-10 py-4 rounded-md">
         <div className={`all_chats  w-[28%] h-[100%] bg-slate-700 rounded-md`}>
-    {selectChat &&   <Chat key={selectChat._id} data={selectChat} selectChat={setselectChat}/>}
+    {/* {selectChat &&   <Chat key={selectChat._id} data={selectChat} selectChat={setselectChat}/>} */}
     
     {activeUser &&  activeUser.map((item:any)=> {
         return  <Chat key={item._id} data={item} selectChat={setselectChat}/>

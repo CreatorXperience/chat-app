@@ -40,11 +40,11 @@ const registerUser = async (req:Request,res:Response)=>{
     }
 
     const getSingleUser = async(req:Request,res:Response)=>{
-        let {id} = req.params
+        let {id, chatId} = req.params
         let user = await SignupModel.findOne({_id: id}, {password: 0})
         if(!user){
             return res.status(404).send({message: "user not found"})
         }
-        res.send(user)
+        res.send({...user, chatId: chatId})
     }
         export {registerUser, getUser,getSingleUser}

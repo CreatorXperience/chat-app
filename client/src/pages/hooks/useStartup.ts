@@ -5,6 +5,8 @@ import useCreateChat from "./useCreateChat"
 import useGetUsers from "../../components/ListUser/hooks/useGetUsers"
 import useGetUser from "../../App/hooks/useGetUser"
 import useSocket from "./useSocket"
+import useSendMessage from "./useSendMessage"
+import { toast } from "react-toastify"
 
 
 
@@ -23,19 +25,16 @@ const useStartUp = ()=>{
     const [selectChat, setselectChat]=  useState<TChat | null>(null)
     const {user:loggedInUser} = useGetUser()
     const {socket, onlineUsers} =  useSocket(loggedInUser)
-    console.log(socket, onlineUsers)
     const {response:data, setChatId} = useGetAllUserChats()
     const [ids, setIds] =  useState<Array<string>>([])
     const [activeUser, setActiveUser] = useState<[]>()
     const [message, setMessage] =  useState<string>()
-
-   
-    // console.log(users)
-    // console.log(chats)
-
+const {messageResponse,mutateMessage} =  useSendMessage()
 
 
    
+
+console.log(chats)
     useEffect(()=> {
         let usersId:Array<string> = [] 
         chats && chats.map((data: {members: string[]}, i: number)=> {
@@ -50,8 +49,9 @@ const useStartUp = ()=>{
             setIds(usersId)
     }, [chats])
 
+    
 
-    // console.log(ids)
+
 
 
     const memoizedId = useMemo(()=>{
@@ -89,14 +89,41 @@ const useStartUp = ()=>{
       }
 
 
+
       const handleUpdateMessage =  (e: React.ChangeEvent<HTMLInputElement>) => {
         e.preventDefault()
         setMessage(e.target.value)
       }
 
-      const handleSendMessage = (e: React.FormEvent, userId: string)=> {
+      const handleSendMessage = (e: React.FormEvent, userId: string,)=> {
         e.preventDefault()
-        mutateChat(userId)
+
+
+       let  chatId:Array<string> = []
+       
+    
+      if(chats){
+            chats && chats.map((data: {members: string[], _id: string}, i: number)=> {
+                return data.members && data.members.map((item2: any)=> {
+                     if(userId === item2){
+                        chatId= [...chatId,data._id]
+                        return item2
+                     }
+                 }).filter((item: any) => item !== undefined)
+                 }).filter((item: any) => item !== undefined)
+        
+        
+        if(message &&  selectChat?._id)
+        mutateMessage({
+            chatId: chatId[0],
+            text: message,
+            senderId: selectChat?._id 
+        })
+        console.log("chatId" , chatId)
+        return
+    }
+
+    toast("couldn't find chat")
       }
 
 
@@ -130,13 +157,10 @@ if(users && memoizedId){
         let user = filterUsersCallback(onlineUsers)
         setActiveUser(user)
     }
-    // setNewUsers(user)
-    // // setActiveUser(onlineUsers)
 }
 else {
     setIsEnabled(true)
 }
-
     }, [users,filterUsersCallback,getOnlineUsersCallback, loggedInUser?._id,setIsEnabled,memoizedId])
 
 
@@ -144,8 +168,8 @@ else {
 
 
 
+
    const  filterData = ()=>{
-    console.log(data)
   let currentChat = chats.filter((item: any)=> item &&  item.members[0] !== loggedInUser?._id)
 setIds(currentChat)
    }

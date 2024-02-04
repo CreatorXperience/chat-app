@@ -8,5 +8,5 @@ const signupControllers_1 = require("../controllers/signup/signupControllers");
 const router = express_1.default.Router();
 router.post("/", signupControllers_1.registerUser);
 router.get("/users", signupControllers_1.getUser);
-router.get("/user/:id", signupControllers_1.getSingleUser);
+router.get("/user/:id/:chatId", signupControllers_1.getSingleUser);
 exports.default = router;
