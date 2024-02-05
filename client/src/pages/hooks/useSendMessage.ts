@@ -50,7 +50,7 @@ const mutateMessage = (message: TChatPayload)=>{
     })
 }
 
-return {messageResponse,isError,isLoading, mutateMessage}
+return {isError,isLoading, mutateMessage}
 }
 
 export default useSendMessage

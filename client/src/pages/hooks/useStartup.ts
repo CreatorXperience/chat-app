@@ -7,6 +7,7 @@ import useGetUser from "../../App/hooks/useGetUser"
 import useSocket from "./useSocket"
 import useSendMessage from "./useSendMessage"
 import { toast } from "react-toastify"
+import useGetMessages from "./useGetMessages"
 
 
 
@@ -25,29 +26,62 @@ const useStartUp = ()=>{
     const [selectChat, setselectChat]=  useState<TChat | null>(null)
     const {user:loggedInUser} = useGetUser()
     const {socket, onlineUsers} =  useSocket(loggedInUser)
-    const {response:data, setChatId} = useGetAllUserChats()
+    const {response:data, setChatIds} = useGetAllUserChats()
     const [ids, setIds] =  useState<Array<string>>([])
     const [activeUser, setActiveUser] = useState<[]>()
     const [message, setMessage] =  useState<string>()
-const {messageResponse,mutateMessage} =  useSendMessage()
-
-
+    const {mutateMessage} =  useSendMessage()
+    const {data: messages, setChatId, isFetching:isMessageFetching} =  useGetMessages()
    
 
-console.log(chats)
+console.log(messages)
+ 
+
+
+
+
+let getChatIds= (chats: any)=> {
+    let usersId:Array<string> = [] 
+
+    chats && chats.map((data: {members: string[]}, i: number)=> {
+        return data.members && data.members.map((item2: any)=> {
+             if(item2 !== loggedInUser?._id){
+                 usersId= [...usersId, item2]
+                 return item2    
+             }
+         }).filter((item: any) => item !== undefined)
+         }).filter((item: any) => item !== undefined)
+ 
+        return usersId
+}
+
+let getSingleChatId = (chats:any)=> {
+    let chatId:Array<string> = []
+
+    chats && chats.map((data: {members: string[], _id: string}, i: number)=> {
+        return data.members && data.members.map((item2: any)=> {
+             if(selectChat?._id === item2){
+                chatId= [...chatId,data._id]
+                return item2
+             }
+         }).filter((item: any) => item !== undefined)
+         }).filter((item: any) => item !== undefined)
+
+  return chatId[0]
+}
+
+
+const getSingleChatIdMemo = useMemo(()=> getSingleChatId(chats), [chats,  selectChat, messages ])
+
+
+const getChatIdsMemo = useMemo(()=> getChatIds(chats), [chats])
+
+
+
+
     useEffect(()=> {
-        let usersId:Array<string> = [] 
-        chats && chats.map((data: {members: string[]}, i: number)=> {
-           return data.members && data.members.map((item2: any)=> {
-                if(item2 !== loggedInUser?._id){
-                    usersId= [...usersId, item2]
-                    return item2
-                }
-            }).filter((item: any) => item !== undefined)
-            }).filter((item: any) => item !== undefined)
-    
-            setIds(usersId)
-    }, [chats])
+       setIds(getChatIdsMemo) 
+    }, [chats, getChatIdsMemo])
 
     
 
@@ -62,9 +96,15 @@ console.log(chats)
 
     useEffect(()=>{
     if(memoizedId && ids){
-    setChatId(memoizedId)
+    setChatIds(memoizedId)
     }
-    }, [chats, ids, memoizedId,setChatId])
+    }, [chats, ids, memoizedId,setChatIds])
+
+
+
+    useEffect(()=> {
+    setChatId(getSingleChatIdMemo)
+    }, [getSingleChatIdMemo])
 
  
 
@@ -85,7 +125,6 @@ console.log(chats)
         })
   
         return  newUsers
-       
       }
 
 
@@ -99,27 +138,16 @@ console.log(chats)
         e.preventDefault()
 
 
-       let  chatId:Array<string> = []
        
     
-      if(chats){
-            chats && chats.map((data: {members: string[], _id: string}, i: number)=> {
-                return data.members && data.members.map((item2: any)=> {
-                     if(userId === item2){
-                        chatId= [...chatId,data._id]
-                        return item2
-                     }
-                 }).filter((item: any) => item !== undefined)
-                 }).filter((item: any) => item !== undefined)
-        
-        
+      if(chats){    
         if(message &&  selectChat?._id)
         mutateMessage({
-            chatId: chatId[0],
+            chatId: getSingleChatIdMemo,
             text: message,
             senderId: selectChat?._id 
         })
-        console.log("chatId" , chatId)
+        console.log("chatId" , getSingleChatIdMemo)
         return
     }
 
@@ -175,7 +203,7 @@ setIds(currentChat)
    }
 
 
-   return {data,filterData, selectChat, setselectChat, mutateChat, onlineUsers, activeUser, handleSendMessage, setMessage, handleUpdateMessage}
+   return {data,filterData, selectChat, setselectChat, mutateChat,isMessageFetching, onlineUsers, activeUser, handleSendMessage, setMessage, handleUpdateMessage, messages, setChatId}
 }
 
 

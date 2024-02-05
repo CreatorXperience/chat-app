@@ -6,7 +6,7 @@ import { fetchAllChats } from "../../services/chats/chats"
 
 
 const useGetAllUserChats = ()=>{
-    const [chatId, setChatId] = useState<Array<string>>([])
+    const [chatId, setChatIds] = useState<Array<string>>([])
     const results = useQueries(chatId.map((id)=>{
         return {queryKey: ["chat", id], queryFn: () => fetchAllChats(id), enabled: !!chatId}
     }))
@@ -15,7 +15,7 @@ const useGetAllUserChats = ()=>{
       return  data.data
     })
 
-    return {response, setChatId}
+    return {response, setChatIds}
 }
 
 export default useGetAllUserChats

@@ -1,14 +1,17 @@
 import Chat from "../components/Chat"
 import ListUser from "../components/ListUser"
+import Message from "../components/Message"
 import chatImage from "../images/chatimage.png"
 import useStartUp from "./hooks/useStartup"
 
 
 const Home = ()=>{
-   const {selectChat, setselectChat, onlineUsers,activeUser,handleSendMessage,handleUpdateMessage, mutateChat} =  useStartUp()
+   const {selectChat, setselectChat, onlineUsers,activeUser,handleSendMessage,handleUpdateMessage, mutateChat,messages, isMessageFetching} =  useStartUp()
 
 
-   console.log(selectChat)
+   console.log(onlineUsers)
+   console.log(messages)
+   console.log(isMessageFetching)
 
     return (
         <div className="w-[100%] flex justify-center"> 
@@ -38,7 +41,11 @@ const Home = ()=>{
             </div>
 
             <div className="w-[100%] h-[80%] bg-slate-900">
-
+               {!isMessageFetching && <div>
+         {messages &&  messages.map((item: any)=>{
+             return  <Message key={item._id} data={item}/>
+            })}
+            </div>}
             </div>
 
             <form className="w-[100%] h-[10%] flex jutify-between items-center bg-slate-700" onSubmit={(e)=>handleSendMessage(e, selectChat._id)}>
