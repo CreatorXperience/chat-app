@@ -13,7 +13,7 @@ const {handleGetToLoginPage,handleLogOut} = useNavUtils()
         Networking
         </div>
 
-       {user &&  <div className="text-teal-400"> logged in as {user?.name} </div>}
+       {user &&  <div className="text-teal-400"> logged in as {user?.name.trim()} </div>}
         <div className="action w-[300px] flex justify-between"> 
         <p className="mr-4"> {user ?  user.email : "Sign up"}</p>
         {user && <p onClick={()=> handleLogOut()}>Logout</p>} 

@@ -10,62 +10,49 @@ import { toast } from "react-toastify"
 import useGetMessages from "./useGetMessages"
 
 
-
-type TChat = {
-    name: string,
-    _id: string,
-    email: string
-} 
-
-
 const useStartUp = ()=>{
-
+    const [main, setMain] = useState<{chatId: string, text: string, senderId: string, from: string}[]>([])
     let {data:users} = useGetUsers()
     const {mutateChat,response,} =  useCreateChat()
     const {data:chats, refetch,setIsEnabled} =  useGetChat()
-    const [selectChat, setselectChat]=  useState<TChat | null>(null)
     const {user:loggedInUser} = useGetUser()
-    const {socket, onlineUsers} =  useSocket(loggedInUser)
+    const { messages, setChatId, isFetching:isMessageFetching} =  useGetMessages(main,setMain)
+    const {socket, onlineUsers, selectChat, setselectChat} =  useSocket(loggedInUser, setMain)
     const {response:data, setChatIds} = useGetAllUserChats()
     const [ids, setIds] =  useState<Array<string>>([])
     const [activeUser, setActiveUser] = useState<[]>()
     const [message, setMessage] =  useState<string>()
     const {mutateMessage} =  useSendMessage()
-    const {data: messages, setChatId, isFetching:isMessageFetching} =  useGetMessages()
-   
 
-console.log(messages)
- 
-
-
-
+  
 
 let getChatIds= (chats: any)=> {
     let usersId:Array<string> = [] 
-
-    chats && chats.map((data: {members: string[]}, i: number)=> {
-        return data.members && data.members.map((item2: any)=> {
-             if(item2 !== loggedInUser?._id){
-                 usersId= [...usersId, item2]
-                 return item2    
-             }
-         }).filter((item: any) => item !== undefined)
-         }).filter((item: any) => item !== undefined)
+if(chats)
+    for (let i = 0; i < chats.length; i++) {
+        const members = chats[i].members;
+        if(members){
+            const matchingValue = members.filter((memberId:any)=> memberId !== loggedInUser?._id);
+            usersId = [...usersId, ...matchingValue]
+        }
+      }
  
         return usersId
+   
 }
 
 let getSingleChatId = (chats:any)=> {
     let chatId:Array<string> = []
-
-    chats && chats.map((data: {members: string[], _id: string}, i: number)=> {
-        return data.members && data.members.map((item2: any)=> {
-             if(selectChat?._id === item2){
-                chatId= [...chatId,data._id]
-                return item2
-             }
-         }).filter((item: any) => item !== undefined)
-         }).filter((item: any) => item !== undefined)
+    if(chats)
+    for (let i = 0; i < chats.length; i++) {
+        const members = chats[i].members;
+        if(members){
+            const matchingValue = members.some((memberId:any)=> memberId === selectChat?._id);
+            if(matchingValue)
+             chatId = [...chatId, chats[i]._id]
+        }
+      }
+ 
 
   return chatId[0]
 }
@@ -137,73 +124,65 @@ const getChatIdsMemo = useMemo(()=> getChatIds(chats), [chats])
       const handleSendMessage = (e: React.FormEvent, userId: string,)=> {
         e.preventDefault()
 
-
-       
-    
       if(chats){    
         if(message &&  selectChat?._id)
         mutateMessage({
-            chatId: getSingleChatIdMemo,
-            text: message,
-            senderId: selectChat?._id 
+        chatId: getSingleChatIdMemo,
+        text: message,
+        senderId: selectChat?._id
         })
-        console.log("chatId" , getSingleChatIdMemo)
-        return
-    }
+
+
+
+        setMain((prev)=> [...prev, {senderId: selectChat?._id as string,from: loggedInUser?._id as string,text:message as string,chatId: getSingleChatIdMemo}])
+
+        socket?.emit("message", {senderId: selectChat?._id,from: loggedInUser?._id,message,chatId: getSingleChatIdMemo})
+        
+    } 
 
     toast("couldn't find chat")
       }
 
 
-      const  filterUsersCallback = useCallback(filterUsers, [ids, users])
+    const  filterUsersCallback = useCallback(filterUsers, [ids, users])
 
 
-      const getOnlineUsers = (users: any)=> {
-            let online = onlineUsers?.map((on)=> {
-                return on.userId
-            })
+    const getOnlineUsers = (users: any)=> {
+    let online = onlineUsers?.map((on)=> {
+    return on.userId
+    })
                 
-            if(online){
-               return users.map((item:any)=> {
-                    if(online && online.includes(item._id)){
-                        let userOnline = {...item, online: true}
-                        return userOnline
-                    }
-                    return item
-                })
-            }
+    if(online){
+    return users.map((item:any)=> {
+    if(online && online.includes(item._id)){
+    let userOnline = {...item, online: true}
+    return userOnline
+    }
+    return item
+    })
+    }
        }
       
 
-       const getOnlineUsersCallback = useCallback(getOnlineUsers, [onlineUsers])
+    const getOnlineUsersCallback = useCallback(getOnlineUsers, [onlineUsers])
      
 
     useEffect(()=>{
-if(users && memoizedId){
+    if(users && memoizedId){
     let onlineUsers = getOnlineUsersCallback(users)
     if(onlineUsers){
         let user = filterUsersCallback(onlineUsers)
         setActiveUser(user)
     }
 }
-else {
+    else {
     setIsEnabled(true)
-}
+    }
     }, [users,filterUsersCallback,getOnlineUsersCallback, loggedInUser?._id,setIsEnabled,memoizedId])
 
 
 
-
-
-
-
-   const  filterData = ()=>{
-  let currentChat = chats.filter((item: any)=> item &&  item.members[0] !== loggedInUser?._id)
-setIds(currentChat)
-   }
-
-
-   return {data,filterData, selectChat, setselectChat, mutateChat,isMessageFetching, onlineUsers, activeUser, handleSendMessage, setMessage, handleUpdateMessage, messages, setChatId}
+   return {data, selectChat, setselectChat, mutateChat,isMessageFetching, onlineUsers, activeUser, handleSendMessage, setMessage, handleUpdateMessage,socket,main, setChatId}
 }
 
 

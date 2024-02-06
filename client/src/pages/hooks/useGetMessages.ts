@@ -4,8 +4,21 @@ import axiosInstance from "../../utils/axiosInstance"
 import { useState } from "react"
 
 
-const useGetMessages = ()=> {
+const useGetMessages = (data:{chatId: string, from: string, senderId: string, text: string}[], setData: React.Dispatch<React.SetStateAction<{
+    chatId: string;
+    text: string;
+    senderId: string;
+    from: string;
+}[]>>
+    )=> {
     const [chatId, setChatId] =  useState<string>()
+    const [messages, setMesssages] =  useState<{
+        chatId: string;
+        text: string;
+        senderId: string;
+        from: string;
+    }[]>()
+
 let fetchMessages = async(chatId: string)=> {
     try{
 
@@ -30,10 +43,15 @@ let fetchMessages = async(chatId: string)=> {
 }
 
 
-let {data, isError, isSuccess, refetch,isFetching} = useQuery(["messages", chatId],() =>  fetchMessages(chatId as string), {
+let {isError, isSuccess, refetch,isFetching} = useQuery(["messages", chatId],() =>  fetchMessages(chatId as string), {
     enabled: !!chatId,
     cacheTime: 30000,
     staleTime: 30000,
+    refetchOnWindowFocus: false,
+    onSuccess: (data)=> {
+        setData(data)
+        // setMesssages(data)
+    },
     isDataEqual(oldData, newData) {
         if(oldData === newData){
             console.log("data is equals")
@@ -45,7 +63,7 @@ let {data, isError, isSuccess, refetch,isFetching} = useQuery(["messages", chatI
 
 
 console.log(chatId)
-return {data, isError,isSuccess, setChatId,isFetching}
+return {messages , data, isError,isSuccess, setChatId,isFetching, setData}
 }
 
 export default useGetMessages

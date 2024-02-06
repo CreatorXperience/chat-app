@@ -58,7 +58,7 @@ allowedHeaders: ['Accept-Version', 'Authorization', 'Credentials', 'Content-Type
 
 
            socket.on("add",(userId)=> {
-            !onlineUsers.some((user)=> user.userId ==  userId )  && 
+            !onlineUsers.some((user)=> user.userId ===  userId )  && 
             onlineUsers.push({
                 userId, 
                 socketId: socket.id
@@ -68,10 +68,25 @@ allowedHeaders: ['Accept-Version', 'Authorization', 'Credentials', 'Content-Type
            })
 
            socket.on("disconnect", ()=>{
-   let online = onlineUsers.filter((user)=> user.socketId !== socket.id)
+            onlineUsers  = onlineUsers.filter((user)=> user.socketId !== socket.id)
    
-   io.emit("online-users", online)
+            io.emit("online-users", onlineUsers)
            })
+
+
+           socket.on("message", (messagePayload: {senderId: string,  message: string, from: string, chatId: string})=> {
+            console.log("i got you message",  messagePayload)
+
+            let id:{userId: string, socketId: string}[]  = onlineUsers.filter((obj)=> obj.userId === messagePayload.senderId)
+            if(id){
+                socket.to(id[0].socketId).emit("getMessage", {
+                    from: messagePayload.from,
+                    message: messagePayload.message,
+                    to: messagePayload.senderId,
+                    chatId: messagePayload.chatId
+                })
+            }
+        })
         })
 
 

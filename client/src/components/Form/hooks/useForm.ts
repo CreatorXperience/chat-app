@@ -51,6 +51,7 @@ const useForm = ()=>{
             const handleSubmit = (e:  React.FormEvent<HTMLFormElement>)=>{
                 e.preventDefault()
                 if(isOnSignupPage?.isUserOnSignUpPage){
+                    userInfo.name = userInfo.name.trimEnd()
                   mutateUser(userInfo)
                    return  
                 }

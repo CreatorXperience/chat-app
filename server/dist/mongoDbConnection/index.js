@@ -56,7 +56,7 @@ const connectToMongoDBDatabase = (server, io, port) => __awaiter(void 0, void 0,
         io.on("connection", (socket) => {
             console.log("connected to socket successfully", socket.id);
             socket.on("add", (userId) => {
-                !onlineUsers.some((user) => user.userId == userId) &&
+                !onlineUsers.some((user) => user.userId === userId) &&
                     onlineUsers.push({
                         userId,
                         socketId: socket.id
@@ -64,8 +64,20 @@ const connectToMongoDBDatabase = (server, io, port) => __awaiter(void 0, void 0,
                 io.emit("online-users", onlineUsers);
             });
             socket.on("disconnect", () => {
-                let online = onlineUsers.filter((user) => user.socketId !== socket.id);
-                io.emit("online-users", online);
+                onlineUsers = onlineUsers.filter((user) => user.socketId !== socket.id);
+                io.emit("online-users", onlineUsers);
+            });
+            socket.on("message", (messagePayload) => {
+                console.log("i got you message", messagePayload);
+                let id = onlineUsers.filter((obj) => obj.userId === messagePayload.senderId);
+                if (id) {
+                    socket.to(id[0].socketId).emit("getMessage", {
+                        from: messagePayload.from,
+                        message: messagePayload.message,
+                        to: messagePayload.senderId,
+                        chatId: messagePayload.chatId
+                    });
+                }
             });
         });
     }

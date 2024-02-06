@@ -1,17 +1,14 @@
 import Chat from "../components/Chat"
 import ListUser from "../components/ListUser"
 import Message from "../components/Message"
+import TempMessage from "../components/TempMessage"
 import chatImage from "../images/chatimage.png"
 import useStartUp from "./hooks/useStartup"
 
 
 const Home = ()=>{
-   const {selectChat, setselectChat, onlineUsers,activeUser,handleSendMessage,handleUpdateMessage, mutateChat,messages, isMessageFetching} =  useStartUp()
+   const {selectChat, setselectChat, onlineUsers,activeUser,handleSendMessage,handleUpdateMessage,main, mutateChat, isMessageFetching} =  useStartUp()
 
-
-   console.log(onlineUsers)
-   console.log(messages)
-   console.log(isMessageFetching)
 
     return (
         <div className="w-[100%] flex justify-center"> 
@@ -23,7 +20,7 @@ const Home = ()=>{
             </div>
           <div className="w-[100%] h-[75vh] mt-5 flex justify-between px-10 py-4 rounded-md">
         <div className={`all_chats  w-[28%] h-[100%] bg-slate-700 rounded-md`}>
-    {/* {selectChat &&   <Chat key={selectChat._id} data={selectChat} selectChat={setselectChat}/>} */}
+
     
     {activeUser &&  activeUser.map((item:any)=> {
         return  <Chat key={item._id} data={item} selectChat={setselectChat}/>
@@ -40,11 +37,12 @@ const Home = ()=>{
                 </div>
             </div>
 
-            <div className="w-[100%] h-[80%] bg-slate-900">
+            <div className="w-[100%] h-[80%] overflow-y-scroll bg-slate-900">
                {!isMessageFetching && <div>
-         {messages &&  messages.map((item: any)=>{
+         {main && main.map((item: any)=>{
              return  <Message key={item._id} data={item}/>
             })}
+
             </div>}
             </div>
 
