@@ -41,13 +41,13 @@ if(chats)
    
 }
 
-let getSingleChatId = (chats:any)=> {
+let getSingleChatId = (chats:any, selectedItemId: string)=> {
     let chatId:Array<string> = []
     if(chats)
     for (let i = 0; i < chats.length; i++) {
         const members = chats[i].members;
         if(members){
-            const matchingValue = members.some((memberId:any)=> memberId === selectChat?._id);
+            const matchingValue = members.some((memberId:any)=> memberId === selectedItemId);
             if(matchingValue)
              chatId = [...chatId, chats[i]._id]
         }
@@ -58,7 +58,7 @@ let getSingleChatId = (chats:any)=> {
 }
 
 
-const getSingleChatIdMemo = useMemo(()=> getSingleChatId(chats), [chats,  selectChat, messages ])
+const getSingleChatIdMemo = useMemo(()=> getSingleChatId(chats, selectChat?._id as string), [chats,  selectChat, messages ])
 
 
 const getChatIdsMemo = useMemo(()=> getChatIds(chats), [chats])
@@ -182,7 +182,7 @@ const getChatIdsMemo = useMemo(()=> getChatIds(chats), [chats])
 
 
 
-   return {data, selectChat, setselectChat, mutateChat,isMessageFetching, onlineUsers, activeUser, handleSendMessage, setMessage, handleUpdateMessage,socket,main, setChatId}
+   return {data, selectChat, setselectChat, mutateChat,isMessageFetching, onlineUsers, activeUser, handleSendMessage, setMessage, handleUpdateMessage,socket,main,loggedInUser, setChatId, getSingleChatIdMemo}
 }
 
 

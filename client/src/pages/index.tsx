@@ -7,7 +7,7 @@ import useStartUp from "./hooks/useStartup"
 
 
 const Home = ()=>{
-   const {selectChat, setselectChat, onlineUsers,activeUser,handleSendMessage,handleUpdateMessage,main, mutateChat, isMessageFetching} =  useStartUp()
+   const {selectChat, setselectChat, onlineUsers,activeUser,handleSendMessage,handleUpdateMessage,main, mutateChat, isMessageFetching, loggedInUser} =  useStartUp()
 
 
     return (
@@ -39,8 +39,9 @@ const Home = ()=>{
 
             <div className="w-[100%] h-[80%] overflow-y-scroll bg-slate-900">
                {!isMessageFetching && <div>
-         {main && main.map((item: any)=>{
-             return  <Message key={item._id} data={item}/>
+         {main && main.map((item,i)=>{
+            // if(item.senderId === loggedInUser?._id) return ""
+             return  <Message key={i} data={item}/>
             })}
 
             </div>}

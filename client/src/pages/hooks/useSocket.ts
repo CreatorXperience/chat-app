@@ -56,7 +56,7 @@ const useSocket = (user:  TUser | null, setSocketMessages: React.Dispatch<React.
                         senderId: res.to,
                         chatId: res.chatId
                     }
-                  
+                        if(res.from === selectChat?._id)
                         setSocketMessages((message) => [...message, obj])
                  
                 })

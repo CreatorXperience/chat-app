@@ -3,7 +3,6 @@ import useGetUser from "../../App/hooks/useGetUser"
 type TMessageProps = {
 data: {
     chatId: string,
-    _id: string,
     senderId: string,
     text: string
 }
