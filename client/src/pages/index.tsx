@@ -7,14 +7,14 @@ import useStartUp from "./hooks/useStartup"
 
 
 const Home = ()=>{
-   const {selectChat, setselectChat, onlineUsers,activeUser,handleSendMessage,handleUpdateMessage,main, mutateChat, isMessageFetching, loggedInUser} =  useStartUp()
+   const {selectChat, setselectChat, onlineUsers,activeUser,handleSendMessage,handleUpdateMessage,main, mutateChat, isMessageFetching, loggedInUser, getSingleChatIdMemo} =  useStartUp()
 
 
     return (
         <div className="w-[100%] flex justify-center"> 
         <div className="w-[90%] h-[auto] bg-slate-800 mt-10 rounded-md">
          <div className="w-[100%] scroll-auto flex mt-4 px-10  ">
-         {activeUser && activeUser.map((user: {_id: string, email: string, name: string, password: string, isChatCreated: boolean})=>{
+         {activeUser && activeUser.map((user)=>{
                return <ListUser onlineUsers={onlineUsers} key={user._id} user={user} displayChat={setselectChat} mutate={mutateChat}  />
             })}
             </div>
@@ -22,8 +22,8 @@ const Home = ()=>{
         <div className={`all_chats  w-[28%] h-[100%] bg-slate-700 rounded-md`}>
 
     
-    {activeUser &&  activeUser.map((item:any)=> {
-        return  <Chat key={item._id} data={item} selectChat={setselectChat}/>
+    {activeUser &&  activeUser.map((item)=> {
+        return  <Chat key={item._id} data={item} selectChat={setselectChat} chats={main}/>
     })}
         </div>
        {selectChat &&  <div className={`chats ${selectChat? "w-[70%]": "w-[0px]"} h-[100%] bg-slate-600 rounded-md`}>

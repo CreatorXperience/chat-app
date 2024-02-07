@@ -20,7 +20,7 @@ const useStartUp = ()=>{
     const {socket, onlineUsers, selectChat, setselectChat} =  useSocket(loggedInUser, setMain)
     const {response:data, setChatIds} = useGetAllUserChats()
     const [ids, setIds] =  useState<Array<string>>([])
-    const [activeUser, setActiveUser] = useState<[]>()
+    const [activeUser, setActiveUser] = useState< {_id: string, email: string, name: string, password: string, isChatCreated: boolean}[]>()
     const [message, setMessage] =  useState<string>()
     const {mutateMessage} =  useSendMessage()
 
@@ -103,7 +103,7 @@ const getChatIdsMemo = useMemo(()=> getChatIds(chats), [chats])
 
 
     const filterUsers = (users:any)=>{
-        let newUsers =   users.map((item:any, index:number)=>  {
+        let newUsers =   users.map((item:any)=>  {
           if(!ids.includes(item._id)){
             let newItem = {...item,  isChatCreated:  false}
               return newItem
