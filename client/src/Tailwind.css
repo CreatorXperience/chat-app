@@ -1,0 +1,14 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+
+body, html {
+    background-color: rgb(15 23 42);
+}
+
+.image{
+    background-image: url("./images/vector.png");
+    background-size: cover;
+}
+

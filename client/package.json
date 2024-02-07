@@ -10,9 +10,17 @@
     "@types/node": "^16.18.75",
     "@types/react": "^18.2.48",
     "@types/react-dom": "^18.2.18",
+    "autoprefixer": "^10.4.17",
+    "axios": "^1.6.7",
+    "postcss": "^8.4.33",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
+    "react-query": "^3.39.3",
+    "react-query-devtools": "^2.6.3",
+    "react-router-dom": "^6.21.3",
     "react-scripts": "5.0.1",
+    "react-toastify": "^10.0.4",
+    "socket.io-client": "^4.7.4",
     "typescript": "^4.9.5",
     "web-vitals": "^2.1.4"
   },
@@ -40,5 +48,8 @@
       "last 1 firefox version",
       "last 1 safari version"
     ]
+  },
+  "devDependencies": {
+    "tailwindcss": "^3.4.1"
   }
 }
